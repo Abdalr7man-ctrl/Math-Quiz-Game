@@ -5,9 +5,6 @@ const int MAX_INPUT_CHARS = 1000;
 
 enum enQuestionLevel {Easy, Med, Hard, Mix};
 enum enOperationType {Add, Sub, Mul, Div, MixOperation};
-// struct 
-// {
-// };
 
 int randomNumber(int from, int to)
 {
@@ -39,13 +36,13 @@ int HowManyQuestions()
 enQuestionLevel QuestionLevel()
 {
     short questionLevel = readPositiveNumber("Enter Questions Level [1] Easy, [2] Med, [3] Hard, [4] Mix? ", 1, 4);
-    return (enQuestionLevel)questionLevel;
+    return (enQuestionLevel)(questionLevel - 1);
 }
 
 enOperationType OperationType()
 {
     short operationType = readPositiveNumber("Type [1] Add, [2] Sub, [3] Mul, [4] Div, [5] Mix? ", 1, 5);
-    return (enOperationType)operationType;
+    return (enOperationType)(operationType - 1);
 }
 
 void showQuestion(int number1, int number2, enOperationType type)
@@ -60,11 +57,11 @@ void showQuestion(int number1, int number2, enOperationType type)
     default: break;
     }
     cout << number1 << endl;
-    cout << number2 << operation << endl;
-    cout << "\n_______________________\n";
+    cout << number2 << " " << operation << endl;
+    cout << "_______________________\n\n";
 }
 
-int questionAnswer(int number1, int number2, enOperationType type)
+float questionAnswer(float number1, float number2, enOperationType type)
 {
     switch (type)
     {
@@ -87,10 +84,35 @@ void showWrongAnswer(int rightAnswer)
     cout << "The right Answer is : " << rightAnswer << "\n\n";
 }
 
+string showQuestionLevel(int level)
+{
+    switch (level)
+    {
+    case Easy: return "Easy";
+    case Med: return "Med";
+    case Hard: return "Hard";
+    case Mix: return "Mix";
+    default: return "None";
+    }
+}
+
+string showOperationType(int type)
+{
+    switch (type)
+    {
+    case Add: return "Add";
+    case Sub: return "Sub";
+    case Mul: return "Mul";
+    case Div: return "Div";
+    case MixOperation: return "Mix Operation";
+    default: return "None";
+    }
+}
+
 void easyQuestion(enOperationType type, int& rightAnswer)
 {
     int answer;
-    int number1 = randomNumber(1, 10);
+    int number1 = randomNumber(0, 10);
     int number2 = randomNumber(1, 10);
     showQuestion(number1, number2, type);
     cin >> answer;
@@ -103,8 +125,8 @@ void easyQuestion(enOperationType type, int& rightAnswer)
 void medQuestion(enOperationType type, int& rightAnswer)
 {
     int answer;
-    int number1 = randomNumber(1, 50);
-    int number2 = randomNumber(1, 50);
+    int number1 = randomNumber(0, 20);
+    int number2 = randomNumber(1, 20);
     showQuestion(number1, number2, type);
     cin >> answer;
     if (answer == questionAnswer(number1, number2, type))
@@ -157,21 +179,26 @@ void question(enQuestionLevel questionLevel, enOperationType operationType, int&
 
 void finalResult(int numberOfQuestion, enQuestionLevel questionLevel, enOperationType operationType, int rightAnswers)
 {
+    int wrongAnswers = numberOfQuestion - rightAnswers;
     cout << "\n__________________________\n\n";
-    cout << "Final Result is PASS :-)";
+    if (rightAnswers >= wrongAnswers)
+        cout << "Final Result is PASS :-)";
+    else
+        cout << "Final Result is FAIL :-(";
     cout << "\n__________________________\n";
     cout << "Number of Question    : " << numberOfQuestion << endl;
-    cout << "Question Level        : " << questionLevel << endl;
-    cout << "Operation Type        : " << operationType << endl;
+    cout << "Question Level        : " << showQuestionLevel(questionLevel) << endl;
+    cout << "Operation Type        : " << showOperationType(operationType) << endl;
     cout << "Number of Right Answer: " << rightAnswers << endl;
-    cout << "Number of Wrong Answer: " << numberOfQuestion - rightAnswers << endl;
+    cout << "Number of Wrong Answer: " << wrongAnswers << endl;
 }
 
 bool playAgain()
 {
     string answer;
-    cout << "Do you want to play again? Y/N? ";
+    cout << "\nDo you want to play again? Y/N? ";
     cin >> answer;
+    cout << endl;
     return (answer  == "y" || answer == "Y");
 }
 
@@ -196,7 +223,7 @@ int main()
 {
     srand(time(NULL));
 
-    // Operation type will == the Operation in the question
+    // TOFIX The Division question
     Exam();
 
     return 0;
